@@ -62,17 +62,17 @@ download_elixir
 install_elixir
 
 head "Building dependencies"
-install_and_cache_deps
 restore_mix
 install_hex
 install_rebar
 
 head "compile"
+app_dependencies
+install_and_cache_deps
+compile_app
 compile
 restore_app
-app_dependencies
 copy_hex
-compile_app
 release_app
 
 head "Finalizing build"
