@@ -176,5 +176,5 @@ function write_export() {
                  export MIX_ENV=${MIX_ENV}"
   fi
 
-  echo $export_line > $build_pack_path/export
+  echo $export_line > $build_pack_dir/export
 }

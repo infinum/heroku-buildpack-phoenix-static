@@ -28,7 +28,7 @@ function load_config_elixir() {
   local custom_config_file="${build_dir}/elixir_buildpack.config"
 
   # Source for default versions file from buildpack first
-  source "${build_pack_path}/elixir_buildpack.config"
+  source "${build_pack_dir}/elixir_buildpack.config"
 
   if [ -f $custom_config_file ];
   then
