@@ -1,4 +1,5 @@
 function restore_app() {
+  head "Restoring app"
   if [ -d $(deps_backup_path) ]; then
     mkdir -p ${build_dir}/deps
     cp -pR $(deps_backup_path)/* ${build_dir}/deps
@@ -14,6 +15,7 @@ function restore_app() {
 
 
 function copy_hex() {
+  head "Copy hex"
   mkdir -p ${build_dir}/.mix/archives
   mkdir -p ${build_dir}/.hex
 
