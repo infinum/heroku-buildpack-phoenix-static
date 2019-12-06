@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 # bin/compile <build-dir> <cache-dir> <env-dir>
 
+# If this var is set to true later on,
+# then elixir and rebar will be rebuilt
+erlang_changed=false
+rebar_changed=false
+elixir_changed=false
+
 build_pack_dir=$(cd $(dirname $(dirname $0)); pwd)
 
 ### Configure environment
@@ -21,21 +27,58 @@ heroku_dir=$build_dir/.heroku
 
 source ${build_pack_dir}/lib/common.sh
 source ${build_pack_dir}/lib/build.sh
+source ${build_pack_dir}/lib/path_funcs.sh
+source ${build_pack_dir}/lib/erlang_funcs.sh
+source ${build_pack_dir}/lib/elixir_funcs.sh
+source ${build_pack_dir}/lib/app_funcs.sh
+source ${build_pack_dir}/lib/canonical_version.sh
 
+mkdir $(platform_tools_path)
 
 head "Loading configuration and environment"
 load_previous_npm_node_versions
-load_config
+load_config_elixir
+load_config_phoenix
 export_config_vars
 export_mix_env
+check_erlang_version "$erlang_version"
+check_stack
+clean_cache
 
+
+head "Installing binaries"
+cached_node=$cache_dir/node-v$node_version-linux-x64.tar.gz
+cleanup_cache
+download_node
+install_node
 install_npm
+if [ -f "$assets_dir/yarn.lock" ]; then
+  install_yarn "$heroku_dir/yarn"
+fi
+download_erlang
+install_erlang
+
+download_elixir
+install_elixir
 
 head "Building dependencies"
 install_and_cache_deps
+restore_mix
+install_hex
+install_rebar
 
+head "compile"
 compile
+restore_app
+app_dependencies
+copy_hex
+compile_app
+release_app
 
 head "Finalizing build"
+backup_app
+backup_mix
+write_profile_d_script
+write_export
 cache_versions
 finalize_node

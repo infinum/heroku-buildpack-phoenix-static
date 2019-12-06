@@ -22,7 +22,29 @@ file_contents() {
   fi
 }
 
-load_config() {
+function load_config_elixir() {
+  output_section "Checking Erlang and Elixir versions"
+
+  local custom_config_file="${build_path}/elixir_buildpack.config"
+
+  # Source for default versions file from buildpack first
+  source "${build_pack_path}/elixir_buildpack.config"
+
+  if [ -f $custom_config_file ];
+  then
+    source $custom_config_file
+  else
+    output_line "WARNING: elixir_buildpack.config wasn't found in the app"
+    output_line "Using default config from Elixir buildpack"
+  fi
+
+  output_line "Will use the following versions:"
+  output_line "* Stack ${STACK}"
+  output_line "* Erlang ${erlang_version}"
+  output_line "* Elixir ${elixir_version[0]} ${elixir_version[1]}"
+}
+
+load_config_phoenix() {
   info "Loading config..."
 
   local custom_config_file="${build_dir}/phoenix_static_buildpack.config"
@@ -91,4 +113,34 @@ export_mix_env() {
   fi
 
   info "* MIX_ENV=${MIX_ENV}"
+}
+
+function check_stack() {
+  if [ "${STACK}" = "cedar" ]; then
+    echo "ERROR: cedar stack is not supported, upgrade to cedar-14"
+    exit 1
+  fi
+
+  if [ ! -f "${cache_path}/stack" ] || [ $(cat "${cache_path}/stack") != "${STACK}" ]; then
+    output_section "Stack changed, will rebuild"
+    $(clear_cached_files)
+  fi
+
+  echo "${STACK}" > "${cache_path}/stack"
+}
+
+function clean_cache() {
+  if [ $always_rebuild = true ]; then
+    output_section "Cleaning all cache to force rebuilds"
+    $(clear_cached_files)
+  fi
+}
+
+function clear_cached_files() {
+  rm -rf \
+    $(erlang_build_path) \
+    $(deps_backup_path) \
+    $(build_backup_path) \
+    $(mix_backup_path) \
+    $(hex_backup_path)
 }
