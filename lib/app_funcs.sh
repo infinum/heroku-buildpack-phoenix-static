@@ -21,6 +21,7 @@ function copy_hex() {
 
 
   ls ${HOME}/.hex
+  ls -dt ${HOME}/.mix/archives/hex-*
 
   # hex is a directory from elixir-1.3.0
   full_hex_file_path=$(ls -dt ${HOME}/.mix/archives/hex-* | head -n 1)
