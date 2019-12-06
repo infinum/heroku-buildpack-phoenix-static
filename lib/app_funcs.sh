@@ -1,21 +1,21 @@
 function restore_app() {
   if [ -d $(deps_backup_path) ]; then
-    mkdir -p ${build_path}/deps
-    cp -pR $(deps_backup_path)/* ${build_path}/deps
+    mkdir -p ${build_dir}/deps
+    cp -pR $(deps_backup_path)/* ${build_dir}/deps
   fi
 
   if [ $erlang_changed != true ] && [ $elixir_changed != true ]; then
     if [ -d $(build_backup_path) ]; then
-      mkdir -p ${build_path}/_build
-      cp -pR $(build_backup_path)/* ${build_path}/_build
+      mkdir -p ${build_dir}/_build
+      cp -pR $(build_backup_path)/* ${build_dir}/_build
     fi
   fi
 }
 
 
 function copy_hex() {
-  mkdir -p ${build_path}/.mix/archives
-  mkdir -p ${build_path}/.hex
+  mkdir -p ${build_dir}/.mix/archives
+  mkdir -p ${build_dir}/.hex
 
 
   # hex is a directory from elixir-1.3.0
@@ -31,14 +31,14 @@ function copy_hex() {
     full_hex_file_path=${HOME}/.mix/archives/hex.ez
   fi
 
-  cp -R ${HOME}/.hex/* ${build_path}/.hex/
+  cp -R ${HOME}/.hex/* ${build_dir}/.hex/
 
   output_section "Copying hex from $full_hex_file_path"
-  cp -R $full_hex_file_path ${build_path}/.mix/archives
+  cp -R $full_hex_file_path ${build_dir}/.mix/archives
 }
 
 function hook_pre_app_dependencies() {
-  cd $build_path
+  cd $build_dir
 
   if [ -n "$hook_pre_fetch_dependencies" ]; then
     output_section "Executing hook before fetching app dependencies: $hook_pre_fetch_dependencies"
@@ -49,7 +49,7 @@ function hook_pre_app_dependencies() {
 }
 
 function hook_pre_compile() {
-  cd $build_path
+  cd $build_dir
 
   if [ -n "$hook_pre_compile" ]; then
     output_section "Executing hook before compile: $hook_pre_compile"
@@ -60,7 +60,7 @@ function hook_pre_compile() {
 }
 
 function hook_post_compile() {
-  cd $build_path
+  cd $build_dir
 
   if [ -n "$hook_post_compile" ]; then
     output_section "Executing hook after compile: $hook_post_compile"
@@ -76,7 +76,7 @@ function app_dependencies() {
   local git_dir_value=$GIT_DIR
   unset GIT_DIR
 
-  cd $build_path
+  cd $build_dir
   output_section "Fetching app dependencies with mix"
   mix deps.get --only $MIX_ENV || exit 1
 
@@ -90,8 +90,8 @@ function backup_app() {
   rm -rf $(deps_backup_path) $(build_backup_path)
 
   mkdir -p $(deps_backup_path) $(build_backup_path)
-  cp -pR ${build_path}/deps/* $(deps_backup_path)
-  cp -pR ${build_path}/_build/* $(build_backup_path)
+  cp -pR ${build_dir}/deps/* $(deps_backup_path)
+  cp -pR ${build_dir}/_build/* $(build_backup_path)
 }
 
 
@@ -99,7 +99,7 @@ function compile_app() {
   local git_dir_value=$GIT_DIR
   unset GIT_DIR
 
-  cd $build_path
+  cd $build_dir
   output_section "Compiling"
 
   if [ -n "$hook_compile" ]; then
@@ -116,7 +116,7 @@ function compile_app() {
 }
 
 function release_app() {
-  cd $build_path
+  cd $build_dir
 
   if [ $release = true ]; then
     output_section "Building release"
@@ -127,7 +127,7 @@ function release_app() {
 }
 
 function post_compile_hook() {
-  cd $build_path
+  cd $build_dir
 
   if [ -n "$post_compile" ]; then
     output_section "Executing DEPRECATED post compile: $post_compile"
@@ -138,7 +138,7 @@ function post_compile_hook() {
 }
 
 function pre_compile_hook() {
-  cd $build_path
+  cd $build_dir
 
   if [ -n "$pre_compile" ]; then
     output_section "Executing DEPRECATED pre compile: $pre_compile"
@@ -150,18 +150,18 @@ function pre_compile_hook() {
 
 function write_profile_d_script() {
   output_section "Creating .profile.d with env vars"
-  mkdir -p $build_path/.profile.d
+  mkdir -p $build_dir/.profile.d
 
   local export_line="export PATH=\$HOME/.platform_tools:\$HOME/.platform_tools/erlang/bin:\$HOME/.platform_tools/elixir/bin:\$PATH
                      export LC_CTYPE=en_US.utf8"
 
   # Only write MIX_ENV to profile if the application did not set MIX_ENV
-  if [ ! -f $env_path/MIX_ENV ]; then
+  if [ ! -f $env_dir/MIX_ENV ]; then
     export_line="${export_line}
                  export MIX_ENV=${MIX_ENV}"
   fi
 
-  echo $export_line >> $build_path/.profile.d/elixir_buildpack_paths.sh
+  echo $export_line >> $build_dir/.profile.d/elixir_buildpack_paths.sh
 }
 
 function write_export() {
@@ -171,7 +171,7 @@ function write_export() {
                      export LC_CTYPE=en_US.utf8"
 
   # Only write MIX_ENV to export if the application did not set MIX_ENV
-  if [ ! -f $env_path/MIX_ENV ]; then
+  if [ ! -f $env_dir/MIX_ENV ]; then
     export_line="${export_line}
                  export MIX_ENV=${MIX_ENV}"
   fi

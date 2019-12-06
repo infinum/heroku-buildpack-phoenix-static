@@ -1,5 +1,5 @@
 function platform_tools_path() {
-  echo "${build_path}/.platform_tools"
+  echo "${build_dir}/.platform_tools"
 }
 
 function erlang_path() {
@@ -18,22 +18,22 @@ function elixir_path() {
   echo "$(platform_tools_path)/elixir"
 }
 
-function erlang_build_path() {
-  echo "${cache_path}/erlang"
+function erlang_build_dir() {
+  echo "${cache_dir}/erlang"
 }
 
 function deps_backup_path() {
-  echo $cache_path/deps_backup
+  echo $cache_dir/deps_backup
 }
 
 function build_backup_path() {
-  echo $cache_path/build_backup
+  echo $cache_dir/build_backup
 }
 
 function mix_backup_path() {
-  echo $cache_path/.mix
+  echo $cache_dir/.mix
 }
 
 function hex_backup_path() {
-  echo $cache_path/.hex
+  echo $cache_dir/.hex
 }

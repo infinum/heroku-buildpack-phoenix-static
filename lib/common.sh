@@ -25,7 +25,7 @@ file_contents() {
 function load_config_elixir() {
   output_section "Checking Erlang and Elixir versions"
 
-  local custom_config_file="${build_path}/elixir_buildpack.config"
+  local custom_config_file="${build_dir}/elixir_buildpack.config"
 
   # Source for default versions file from buildpack first
   source "${build_pack_path}/elixir_buildpack.config"
@@ -121,12 +121,12 @@ function check_stack() {
     exit 1
   fi
 
-  if [ ! -f "${cache_path}/stack" ] || [ $(cat "${cache_path}/stack") != "${STACK}" ]; then
+  if [ ! -f "${cache_dir}/stack" ] || [ $(cat "${cache_dir}/stack") != "${STACK}" ]; then
     output_section "Stack changed, will rebuild"
     $(clear_cached_files)
   fi
 
-  echo "${STACK}" > "${cache_path}/stack"
+  echo "${STACK}" > "${cache_dir}/stack"
 }
 
 function clean_cache() {
@@ -138,7 +138,7 @@ function clean_cache() {
 
 function clear_cached_files() {
   rm -rf \
-    $(erlang_build_path) \
+    $(erlang_build_dir) \
     $(deps_backup_path) \
     $(build_backup_path) \
     $(mix_backup_path) \
