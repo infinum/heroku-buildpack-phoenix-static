@@ -13,10 +13,10 @@ function download_erlang() {
     # Set this so elixir will be force-rebuilt
     erlang_changed=true
 
-    output_section "Fetching Erlang ${erlang_version} from ${erlang_package_url}"
+    head "Fetching Erlang ${erlang_version} from ${erlang_package_url}"
     curl -s ${erlang_package_url} -o ${cache_dir}/$(erlang_tarball) || exit 1
   else
-    output_section "Using cached Erlang ${erlang_version}"
+    head "Using cached Erlang ${erlang_version}"
   fi
 }
 
@@ -25,7 +25,7 @@ function clean_erlang_downloads() {
 }
 
 function install_erlang() {
-  output_section "Installing Erlang ${erlang_version} $(erlang_changed)"
+  head "Installing Erlang ${erlang_version} $(erlang_changed)"
 
   rm -rf $(erlang_build_dir)
   mkdir -p $(erlang_build_dir)

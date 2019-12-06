@@ -33,7 +33,7 @@ function copy_hex() {
 
   cp -R ${HOME}/.hex/* ${build_dir}/.hex/
 
-  output_section "Copying hex from $full_hex_file_path"
+  head "Copying hex from $full_hex_file_path"
   cp -R $full_hex_file_path ${build_dir}/.mix/archives
 }
 
@@ -41,7 +41,7 @@ function hook_pre_app_dependencies() {
   cd $build_dir
 
   if [ -n "$hook_pre_fetch_dependencies" ]; then
-    output_section "Executing hook before fetching app dependencies: $hook_pre_fetch_dependencies"
+    head "Executing hook before fetching app dependencies: $hook_pre_fetch_dependencies"
     $hook_pre_fetch_dependencies || exit 1
   fi
 
@@ -52,7 +52,7 @@ function hook_pre_compile() {
   cd $build_dir
 
   if [ -n "$hook_pre_compile" ]; then
-    output_section "Executing hook before compile: $hook_pre_compile"
+    head "Executing hook before compile: $hook_pre_compile"
     $hook_pre_compile || exit 1
   fi
 
@@ -63,7 +63,7 @@ function hook_post_compile() {
   cd $build_dir
 
   if [ -n "$hook_post_compile" ]; then
-    output_section "Executing hook after compile: $hook_post_compile"
+    head "Executing hook after compile: $hook_post_compile"
     $hook_post_compile || exit 1
   fi
 
@@ -77,7 +77,7 @@ function app_dependencies() {
   unset GIT_DIR
 
   cd $build_dir
-  output_section "Fetching app dependencies with mix"
+  head "Fetching app dependencies with mix"
   mix deps.get --only $MIX_ENV || exit 1
 
   export GIT_DIR=$git_dir_value
@@ -100,10 +100,10 @@ function compile_app() {
   unset GIT_DIR
 
   cd $build_dir
-  output_section "Compiling"
+  head "Compiling"
 
   if [ -n "$hook_compile" ]; then
-     output_section "(using custom compile command)"
+     head "(using custom compile command)"
      $hook_compile || exit 1
   else
      mix compile --force || exit 1
@@ -119,7 +119,7 @@ function release_app() {
   cd $build_dir
 
   if [ $release = true ]; then
-    output_section "Building release"
+    head "Building release"
     mix release --overwrite
   fi
 
@@ -130,7 +130,7 @@ function post_compile_hook() {
   cd $build_dir
 
   if [ -n "$post_compile" ]; then
-    output_section "Executing DEPRECATED post compile: $post_compile"
+    head "Executing DEPRECATED post compile: $post_compile"
     $post_compile || exit 1
   fi
 
@@ -141,7 +141,7 @@ function pre_compile_hook() {
   cd $build_dir
 
   if [ -n "$pre_compile" ]; then
-    output_section "Executing DEPRECATED pre compile: $pre_compile"
+    head "Executing DEPRECATED pre compile: $pre_compile"
     $pre_compile || exit 1
   fi
 
@@ -149,7 +149,7 @@ function pre_compile_hook() {
 }
 
 function write_profile_d_script() {
-  output_section "Creating .profile.d with env vars"
+  head "Creating .profile.d with env vars"
   mkdir -p $build_dir/.profile.d
 
   local export_line="export PATH=\$HOME/.platform_tools:\$HOME/.platform_tools/erlang/bin:\$HOME/.platform_tools/elixir/bin:\$PATH
@@ -165,7 +165,7 @@ function write_profile_d_script() {
 }
 
 function write_export() {
-  output_section "Writing export for multi-buildpack support"
+  head "Writing export for multi-buildpack support"
 
   local export_line="export PATH=$(platform_tools_path):$(erlang_path)/bin:$(elixir_path)/bin:$PATH
                      export LC_CTYPE=en_US.utf8"

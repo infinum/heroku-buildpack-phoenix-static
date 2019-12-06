@@ -9,22 +9,22 @@ function download_elixir() {
 
     local download_url="https://repo.hex.pm/builds/elixir/${elixir_version}-otp-${otp_version}.zip"
 
-    output_section "Fetching Elixir ${elixir_version} for OTP ${otp_version} from ${download_url}"
+    head "Fetching Elixir ${elixir_version} for OTP ${otp_version} from ${download_url}"
 
     curl -s ${download_url} -o ${cache_dir}/$(elixir_download_file)
 
     if [ $? -ne 0 ]; then
-      output_section "Falling back to fetching Elixir ${elixir_version} for generic OTP version"
+      head "Falling back to fetching Elixir ${elixir_version} for generic OTP version"
       local download_url="https://repo.hex.pm/builds/elixir/${elixir_version}.zip"
       curl -s ${download_url} -o ${cache_dir}/$(elixir_download_file) || exit 1
     fi
   else
-    output_section "Using cached Elixir ${elixir_version}"
+    head "Using cached Elixir ${elixir_version}"
   fi
 }
 
 function install_elixir() {
-  output_section "Installing Elixir ${elixir_version} $(elixir_changed)"
+  head "Installing Elixir ${elixir_version} $(elixir_changed)"
 
   mkdir -p $(elixir_path)
   cd $(elixir_path)
@@ -57,9 +57,9 @@ function fix_elixir_version() {
     fi
 
   else
-    output_line "Invalid Elixir version specified"
-    output_line "See the README for allowed formats at:"
-    output_line "https://github.com/HashNuke/heroku-buildpack-elixir"
+    info "Invalid Elixir version specified"
+    info "See the README for allowed formats at:"
+    info "https://github.com/HashNuke/heroku-buildpack-elixir"
     exit 1
   fi
 }
@@ -95,12 +95,12 @@ function backup_mix() {
 }
 
 function install_hex() {
-  output_section "Installing Hex"
+  head "Installing Hex"
   mix local.hex --force
 }
 
 function install_rebar() {
-  output_section "Installing rebar"
+  head "Installing rebar"
 
   mix local.rebar --force
 }

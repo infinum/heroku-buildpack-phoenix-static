@@ -23,7 +23,7 @@ file_contents() {
 }
 
 function load_config_elixir() {
-  output_section "Checking Erlang and Elixir versions"
+  head "Checking Erlang and Elixir versions"
 
   local custom_config_file="${build_dir}/elixir_buildpack.config"
 
@@ -34,14 +34,14 @@ function load_config_elixir() {
   then
     source $custom_config_file
   else
-    output_line "WARNING: elixir_buildpack.config wasn't found in the app"
-    output_line "Using default config from Elixir buildpack"
+    info "WARNING: elixir_buildpack.config wasn't found in the app"
+    info "Using default config from Elixir buildpack"
   fi
 
-  output_line "Will use the following versions:"
-  output_line "* Stack ${STACK}"
-  output_line "* Erlang ${erlang_version}"
-  output_line "* Elixir ${elixir_version[0]} ${elixir_version[1]}"
+  info "Will use the following versions:"
+  info "* Stack ${STACK}"
+  info "* Erlang ${erlang_version}"
+  info "* Elixir ${elixir_version[0]} ${elixir_version[1]}"
 }
 
 load_config_phoenix() {
@@ -122,7 +122,7 @@ function check_stack() {
   fi
 
   if [ ! -f "${cache_dir}/stack" ] || [ $(cat "${cache_dir}/stack") != "${STACK}" ]; then
-    output_section "Stack changed, will rebuild"
+    head "Stack changed, will rebuild"
     $(clear_cached_files)
   fi
 
@@ -131,7 +131,7 @@ function check_stack() {
 
 function clean_cache() {
   if [ $always_rebuild = true ]; then
-    output_section "Cleaning all cache to force rebuilds"
+    head "Cleaning all cache to force rebuilds"
     $(clear_cached_files)
   fi
 }
