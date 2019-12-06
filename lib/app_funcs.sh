@@ -19,11 +19,9 @@ function copy_hex() {
   mkdir -p ${build_dir}/.mix/archives
   mkdir -p ${build_dir}/.hex
 
-  ls -al ${HOME}/.mix/archives/
-
   # hex is a directory from elixir-1.3.0
-  full_hex_file_path=$(ls -dt ${HOME}/.mix/archives/hex-* | head -n 1)
-  echo $full_hex_file_path
+  # full_hex_file_path=$(ls -dt ${HOME}/.mix/archives/hex-* | head -n 1)
+  # echo $full_hex_file_path
 
   # hex file names after elixir-1.1 in the hex-<version>.ez form
   # if [ -z "$full_hex_file_path" ]; then
@@ -35,10 +33,10 @@ function copy_hex() {
   #   full_hex_file_path=${HOME}/.mix/archives/hex.ez
   # fi
 
+  full_hex_file_path=/app/.mix/archives/hex-0.20.1
   cp -R ${HOME}/.hex/* ${build_dir}/.hex/
 
   head "Copying hex from $full_hex_file_path"
-  echo `cp -R $full_hex_file_path ${build_dir}/.mix/archives`
   cp -R $full_hex_file_path ${build_dir}/.mix/archives
 }
 
