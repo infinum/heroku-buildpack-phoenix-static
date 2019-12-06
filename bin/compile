@@ -66,13 +66,18 @@ restore_mix
 install_hex
 install_rebar
 
-head "compile"
+head "deps"
 app_dependencies
 install_and_cache_deps
+head "compile_app"
 compile_app
+head "compile"
 compile
+head "restore_app"
 restore_app
+head "copy_hex"
 copy_hex
+head "release_app"
 release_app
 
 head "Finalizing build"

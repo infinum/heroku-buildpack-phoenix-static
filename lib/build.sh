@@ -185,17 +185,17 @@ run_compile() {
   cd $assets_dir
 
   if [ -f $custom_compile ]; then
-    info "Running custom compile"
+    head "Running custom compile"
     source $custom_compile 2>&1 | indent
   else
-    info "Running default compile"
+    head "Running default compile"
     source ${build_pack_dir}/${compile} 2>&1 | indent
   fi
 
   cd $phoenix_dir
 
   if [ $has_clean = 0 ]; then
-    info "Caching assets"
+    head "Caching assets"
     rsync -a --delete -v priv/static/ $cache_dir/phoenix-static
   fi
 }
