@@ -29,6 +29,8 @@ load_config
 export_config_vars
 export_mix_env
 
+install_npm
+
 head "Building dependencies"
 install_and_cache_deps
 
