@@ -23,17 +23,20 @@ function copy_hex() {
 
   # hex is a directory from elixir-1.3.0
   full_hex_file_path=$(ls -dt ${HOME}/.mix/archives/hex-* | head -n 1)
-  head "$full_hex_file_path"
+  info "ls"
+  ls -dt ${HOME}/.mix/archives/hex-*
+  ls -dt ${HOME}/.mix/archives/hex-* | head -n 1
+  info "full_hex_file path $full_hex_file_path"
 
   # hex file names after elixir-1.1 in the hex-<version>.ez form
-  if [ -z "$full_hex_file_path" ]; then
-    full_hex_file_path=$(ls -t ${HOME}/.mix/archives/hex-*.ez | head -n 1)
-  fi
+  # if [ -z "$full_hex_file_path" ]; then
+  #   full_hex_file_path=$(ls -t ${HOME}/.mix/archives/hex-*.ez | head -n 1)
+  # fi
 
-  # For older versions of hex which have no version name in file
-  if [ -z "$full_hex_file_path" ]; then
-    full_hex_file_path=${HOME}/.mix/archives/hex.ez
-  fi
+  # # For older versions of hex which have no version name in file
+  # if [ -z "$full_hex_file_path" ]; then
+  #   full_hex_file_path=${HOME}/.mix/archives/hex.ez
+  # fi
 
   cp -R ${HOME}/.hex/* ${build_dir}/.hex/
 
